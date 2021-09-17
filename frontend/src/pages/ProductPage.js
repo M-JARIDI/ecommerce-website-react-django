@@ -52,7 +52,7 @@ export default function ProductPage({ match }) {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button
-                  className="btn-block"
+                  className="w-100"
                   type="button"
                   disabled={product.countInStock === 0}
                 >
