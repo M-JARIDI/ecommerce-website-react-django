@@ -4,7 +4,7 @@ import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
 // getState is equivalent to useSelector nearly.
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/products/${id}`);
-
+  console.log(`data add to cart`, data);
   dispatch({
     type: CART_ADD_ITEM,
     payload: {
@@ -12,11 +12,10 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       name: data.name,
       image: data.image,
       price: data.price,
-      counterInStock: data.counterInStock,
+      countInStock: data.countInStock,
       qty,
     },
   });
-  console.log(`test action`);
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
 
