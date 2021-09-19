@@ -11,7 +11,7 @@ import {
   Card,
 } from "react-bootstrap";
 import Message from "../components/Message";
-import { addToCart } from "../actions/cartActions";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 
 export default function CartPage({ match, location, history }) {
   const productId = match.params.id;
@@ -19,7 +19,6 @@ export default function CartPage({ match, location, history }) {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  console.log(`location.search`, cartItems);
 
   useEffect(() => {
     if (productId) {
@@ -28,7 +27,7 @@ export default function CartPage({ match, location, history }) {
   }, [dispatch, productId, qty]);
 
   const removeFromCartHandler = (id) => {
-    //   dispatch(removeFromCart(productId));
+    dispatch(removeFromCart(id));
   };
 
   const checkoutHandler = () => {
