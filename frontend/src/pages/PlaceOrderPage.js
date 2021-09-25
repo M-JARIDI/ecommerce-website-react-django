@@ -34,7 +34,7 @@ export default function PlaceOrderPage({ history }) {
 
   useEffect(() => {
     if (success) {
-      history.push(`/orders/${order._id}`);
+      history.push(`/order/${order._id}`);
       dispatch({ type: ORDER_CREATE_RESET });
     }
   }, [success, history]);
