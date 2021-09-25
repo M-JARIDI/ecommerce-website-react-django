@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetails, updateUserProfile } from "../actions/userActions";
+import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 export default function ProfilePage({ history }) {
   const [name, setName] = useState("");
@@ -21,32 +22,43 @@ export default function ProfilePage({ history }) {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { success } = userUpdateProfile;
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     } else {
-      if (!user || !user.name) {
+      if (!user || !user.name || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch(getUserDetails("profile"));
       } else {
         setName(user.name);
         setEmail(user.email);
       }
     }
-  }, [dispatch, userInfo, user, history]);
+  }, [dispatch, userInfo, user, history, success]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      //   dispatch(register(name, email, password));
-      console.log("updating");
+      dispatch(
+        updateUserProfile({
+          id: user._id,
+          name,
+          email,
+          password,
+        })
+      );
+      setMessage("");
     }
   };
 
   return (
     <Row>
-      <Col md={3}>
+      <Col md={9}>
         <h2>User Profile</h2>
 
         {message && <Message variant="danger">{message}</Message>}
@@ -100,7 +112,7 @@ export default function ProfilePage({ history }) {
           </Button>
         </Form>
       </Col>
-      <Col md={9}>
+      <Col md={3}>
         <h2>My Orders</h2>
       </Col>
     </Row>
