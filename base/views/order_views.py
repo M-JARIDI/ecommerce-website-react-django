@@ -9,13 +9,13 @@ from base.serializers import ProductSerializer, OrderItemSerializer
 from rest_framework import status
 
 @api_view(['POST'])
-@permission_classes(["IsAuthenticated"])
+@permission_classes([IsAuthenticated])
 def addOrderItems(request):
 
     user = request.user
     data = request.data
 
-    orderItems = data(['orderItems'])
+    orderItems = data['orderItems']
 
     if orderItems and len(orderItems) == 0:
         return Response({"detail": "No Order Items"}, status=status.HTTP_400_BAD_REQUEST)
@@ -24,13 +24,13 @@ def addOrderItems(request):
         # 1- create order
         order = Order.objects.create(
             user = user,
-            paymentMethod = data['paymentMethode'],
+            paymentMethod = data['paymentMethod'],
             taxPrice = data['taxPrice'],
             shippingPrice = data['shippingPrice'],
             totalPrice = data['totalPrice'],
         )
         # 2- create shipping address
-        shipping = shippingAddress.objects.create(
+        shipping = ShippingAddress.objects.create(
             order = order,
             address = data['shippingAddress']['address'],
             city = data['shippingAddress']['city'],
@@ -39,7 +39,7 @@ def addOrderItems(request):
         )
         # 3- create order items and set order to orderItem relationship
         for i in orderItems:
-            product = Product.objects.get(_id = i)["product"]
+            product = Product.objects.get(_id = i['product'])
 
             item = OrderItem.objects.create(
                 product = product,
@@ -54,5 +54,5 @@ def addOrderItems(request):
             product.countInStock -= item.qty
             product.save()
     
-    serializer = OrderItemSerializer(order, many=True)
-    return Response(serializer.data)
+        serializer = OrderItemSerializer(order, many=False)
+        return Response(serializer.data)

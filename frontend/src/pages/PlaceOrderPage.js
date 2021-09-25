@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Image, Card, ListGroup, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
-// import { saveShippingAddress } from "../actions/cartActions";
+import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 
-export default function PlaceOrderPage() {
+export default function PlaceOrderPage({ history }) {
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+
   const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   cart.itemsPrice = cart.cartItems
     .reduce((sum, cartItem) => sum + cartItem.price * cartItem.qty, 0)
@@ -23,8 +28,29 @@ export default function PlaceOrderPage() {
     Number(cart.taxPrice)
   ).toFixed(2);
 
+  if (!cart.paymentMethod) {
+    history.push("/payment");
+  }
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`);
+      dispatch({ type: ORDER_CREATE_RESET });
+    }
+  }, [success, history]);
+
   const placeOrder = () => {
-    console.log("object");
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    );
   };
 
   return (
@@ -113,6 +139,9 @@ export default function PlaceOrderPage() {
                   <Col>Total : </Col>
                   <Col>${cart.totalPrice}</Col>
                 </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                {error ? <Message variant="danger">{error}</Message> : ""}
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button
