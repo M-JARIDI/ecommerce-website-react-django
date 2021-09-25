@@ -22,6 +22,7 @@ export default function ProductPage({ match, history }) {
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { product, loading, error } = productDetails;
+  console.log(`product.countInStock`, product.countInStock);
 
   useEffect(() => {
     dispatch(listProductDetails(match.params.id));
@@ -108,7 +109,7 @@ export default function ProductPage({ match, history }) {
                   <Button
                     className="w-100"
                     type="button"
-                    disabled={product.countInStock === 0}
+                    disabled={product.countInStock <= 0}
                     onClick={addToCartHandler}
                   >
                     Add to cart

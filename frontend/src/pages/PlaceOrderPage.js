@@ -34,7 +34,7 @@ export default function PlaceOrderPage({ history }) {
 
   useEffect(() => {
     if (success) {
-      history.push(`/order/${order._id}`);
+      history.push(`/orders/${order._id}`);
       dispatch({ type: ORDER_CREATE_RESET });
     }
   }, [success, history]);
@@ -62,7 +62,7 @@ export default function PlaceOrderPage({ history }) {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <storng>Shipping :</storng> {cart.shippingAddress.address},{" "}
+                <strong>Shipping :</strong> {cart.shippingAddress.address},{" "}
                 {cart.shippingAddress.city} {"   "}
                 {cart.shippingAddress.postalCode}, {"   "}
                 {cart.shippingAddress.country}
@@ -72,7 +72,7 @@ export default function PlaceOrderPage({ history }) {
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <p>
-                <storng>Method :</storng> {cart.paymentMethod}
+                <strong>Method :</strong> {cart.paymentMethod}
               </p>
             </ListGroup.Item>
 
