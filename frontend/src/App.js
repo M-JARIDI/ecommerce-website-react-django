@@ -12,6 +12,7 @@ import ShippingPage from "./pages/ShippingPage";
 import PaymentPage from "./pages/PaymentPage";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
 import OrderPage from "./pages/OrderPage";
+import UserListPage from "./pages/UserListPage";
 
 export default function App() {
   return (
@@ -29,6 +30,8 @@ export default function App() {
           <Route path="/order/:id" component={OrderPage} />
           <Route path="/product/:id" component={ProductPage} />
           <Route path="/cart/:id?" component={CartPage} />
+
+          <Route path="/admin/userlist" component={UserListPage} />
         </Container>
       </main>
       <Footer />
