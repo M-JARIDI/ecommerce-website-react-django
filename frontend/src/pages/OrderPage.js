@@ -96,7 +96,9 @@ export default function PlaceOrderPage({ match }) {
                 <strong>Method :</strong> {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">Paid on {order.paidAt}</Message>
+                <Message variant="success">
+                  Paid on {order.paidAt.substring(0, 10)}
+                </Message>
               ) : (
                 <Message variant="warning">Not Paid</Message>
               )}
