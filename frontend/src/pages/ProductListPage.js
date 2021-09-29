@@ -4,13 +4,20 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Row, Col, Table, Button } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { listProducts } from "../actions/productActions";
+import { listProducts, deleteProduct } from "../actions/productActions";
 
 export default function ProductListPage({ match, history }) {
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
   const { products, loading, error } = productList;
+
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    loading: loadingDelete,
+    success: successDelete,
+    error: errorDelete,
+  } = productDelete;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -21,11 +28,11 @@ export default function ProductListPage({ match, history }) {
     } else {
       history.push("/login");
     }
-  }, [userInfo, dispatch, history]);
+  }, [userInfo, successDelete, dispatch, history]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure you want to delete this product ?")) {
-      //   dispatch(deleteUser(id));
+      dispatch(deleteProduct(id));
     }
   };
 
@@ -45,6 +52,9 @@ export default function ProductListPage({ match, history }) {
           </Button>
         </Col>
       </Row>
+
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
 
       {loading ? (
         <Loader />
