@@ -88,7 +88,7 @@ def getUserById(request, pk):
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])
 def updateUser(request, pk):
-    user = User.objcets.get(id = pk)
+    user = User.objects.get(id = pk)
 
     data = request.data
 
