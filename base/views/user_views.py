@@ -24,6 +24,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+
 @api_view(['POST'])
 def registerUser(request):
     data = request.data
@@ -40,6 +41,7 @@ def registerUser(request):
     except:
         message = {'detail': 'User with this email already exists'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -66,11 +68,38 @@ def getUserProfile(request):
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def getUsers(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True) 
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getUserById(request, pk):
+    user = User.objects.get(id = pk)
+    serializer = UserSerializer(user, many=False) 
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateUser(request, pk):
+    user = User.objcets.get(id = pk)
+
+    data = request.data
+
+    user.first_name = data['name']
+    user.username = data['email']
+    user.is_staff = data['isAdmin']
+
+    user.save()
+    
+    serializer = UserSerializer(user, many=False)
+
     return Response(serializer.data)
 
 
