@@ -10,7 +10,11 @@ from rest_framework import status
 
 @api_view(['GET'])
 def getProducts(request):
-    products = Product.objects.all() # returns back all the products from our database
+    query =  request.query_params.get('keyword')
+    if query == None:
+        query = ''
+
+    products = Product.objects.filter(name__icontains= query) # i : insensitive : comme majuscule comme miniscule
     serializer = ProductSerializer(products, many=True) # that means that we have multipls products
     return Response(serializer.data)
 
