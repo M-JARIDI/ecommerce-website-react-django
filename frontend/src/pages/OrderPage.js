@@ -72,7 +72,7 @@ export default function PlaceOrderPage({ match, history }) {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, successPay, successDeliver, orderId]);
+  }, [dispatch, history, userInfo, order, successPay, successDeliver, orderId]);
 
   const successPayementHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
