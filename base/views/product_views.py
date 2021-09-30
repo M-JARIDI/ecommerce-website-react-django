@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from base.models import Product, Review
 from base.serializers import ProductSerializer
@@ -15,8 +16,24 @@ def getProducts(request):
         query = ''
 
     products = Product.objects.filter(name__icontains= query) # i : insensitive : comme majuscule comme miniscule
-    serializer = ProductSerializer(products, many=True) # that means that we have multipls products
-    return Response(serializer.data)
+    
+    page = request.query_params.get('page')
+    paginator = Paginator(products, 5) # number of elements to display in a page
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger: # first render, there is no page given in params
+        products = paginator.page(1)
+    except EmptyPage: # a page does not exist
+        products = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+
+    page = int(page)
+    
+    serializer = ProductSerializer(products, many=True)
+    return Response({'products': serializer.data, 'page': page, 'pages': paginator.num_pages})
 
 
 @api_view(['GET'])

@@ -4,12 +4,13 @@ import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Paginate from "../components/Paginate";
 import { listProducts } from "../actions/productActions";
 
 export default function HomePage({ history }) {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
-  const { products, loading, error } = productList;
+  const { products, page, pages, loading, error } = productList;
 
   let keyword = history.location.search;
 
@@ -25,15 +26,18 @@ export default function HomePage({ history }) {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Row>
-          {products.map((product) => {
-            return (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} />
-              </Col>
-            );
-          })}
-        </Row>
+        <div>
+          <Row>
+            {products.map((product) => {
+              return (
+                <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                  <Product product={product} />
+                </Col>
+              );
+            })}
+          </Row>
+          <Paginate page={page} pages={pages} keyword={keyword} />
+        </div>
       )}
     </div>
   );
