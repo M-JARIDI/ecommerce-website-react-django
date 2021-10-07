@@ -15,6 +15,8 @@ import {
   ORDER_DELIVER_RESET,
 } from "../constants/orderConstants";
 
+const REACT_APP_PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID;
+
 export default function PlaceOrderPage({ match, history }) {
   const orderId = match.params.id;
   const dispatch = useDispatch();
@@ -42,8 +44,7 @@ export default function PlaceOrderPage({ match, history }) {
   const addPayPalScript = () => {
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.src =
-      "https://www.paypal.com/sdk/js?client-id=AYd4FO2tJKrhXNhqW7f4uVE4cFhqzLypwJD67zck4FvEeww9IY0W5p5dZ08FynHX5-0VzQK2ZGsCQbFO";
+    script.src = `https://www.paypal.com/sdk/js?client-id=${REACT_APP_PAYPAL_CLIENT_ID}`;
     script.async = true;
     script.onload = () => {
       setSdkReady(true);
